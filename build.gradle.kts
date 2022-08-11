@@ -20,7 +20,6 @@ dependencies {
    compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
    implementation(kotlin("stdlib-jdk8"))
    implementation("com.github.twitch4j:twitch4j:1.11.0")
-   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }
 
 java {
