@@ -1,0 +1,7 @@
+name: TwitchWhitelist
+version: '${version}'
+main: de.jakkoble.TwitchWhitelist
+api-version: 1.19
+authors: [ Jakkoble ]
+description: Whitlist Players via Twitch Channel Points Reward
+website: https://jakkoble.de
