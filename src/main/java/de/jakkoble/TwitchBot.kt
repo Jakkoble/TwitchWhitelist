@@ -7,12 +7,19 @@ import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
 import de.jakkoble.Whitelist.whitelist
 import kotlinx.coroutines.runBlocking
 import org.bukkit.Bukkit
-import java.util.logging.Level
+import org.bukkit.ChatColor
 
 class TwitchBot {
    private lateinit var twitchClient: TwitchClient
-   private val credential = OAuth2Credential("twitch", Config().getData("token"))
+   private var token = Config().getData("token")
+   var available = true
+   private val credential = OAuth2Credential("twitch", token)
    fun connect(): Unit = runBlocking {
+      if (token.length != 30) {
+         println("Invalid Token")
+         available = false
+         return@runBlocking
+      }
       twitchClient = TwitchClientBuilder.builder()
          .withEnableChat(true)
          .withEnablePubSub(true)
@@ -23,18 +30,17 @@ class TwitchBot {
       registerEvent()
    }
    fun disconnect() {
-      twitchClient.close()
+      if (available) twitchClient.close()
    }
    private fun registerEvent() = runBlocking {
       twitchClient.pubSub.listenForChannelPointsRedemptionEvents(credential, getChannelID(Config().getData("Channel")))
       twitchClient.eventManager.onEvent(RewardRedeemedEvent::class.java) { event: RewardRedeemedEvent ->
          if (event.redemption.reward.title.equals("Spotify Songwunsch")) {
             val userName = event.redemption.userInput
-            if (Bukkit.getOfflinePlayer(userName).whitelist()) {
-               TwitchWhitelist.instance.logger.log(Level.WARNING, "Added Player $userName to the Whitelist.")
-               if (Config().getData("sendResponseMessage").toBoolean())
-                  twitchClient.chat.sendMessage(getChannelID(Config().getData("Channel")), Config().getData("responseMessage"))
-            }
+            if (!Bukkit.getOfflinePlayer(userName).whitelist()) return@onEvent
+            TwitchWhitelist.instance.server.consoleSender.sendMessage("${ChatColor.GREEN}Added Player $userName to the Whitelist.")
+            if (Config().getData("sendResponseMessage").toBoolean())
+               twitchClient.chat.sendMessage(getChannelID(Config().getData("Channel")), Config().getData("responseMessage"))
          }
       }
    }
