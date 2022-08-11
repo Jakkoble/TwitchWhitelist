@@ -28,7 +28,7 @@ class TwitchWhitelist : JavaPlugin(), Listener {
       server.consoleSender.sendMessage("")
       server.consoleSender.sendMessage("${ChatColor.DARK_PURPLE}Version: ${ChatColor.GRAY}${description.version}")
       server.consoleSender.sendMessage("${ChatColor.DARK_PURPLE}Website: ${ChatColor.GRAY}${description.website}")
-      server.consoleSender.sendMessage("${ChatColor.DARK_PURPLE}Author: ${ChatColor.GRAY}${description.authors}")
+      server.consoleSender.sendMessage("${ChatColor.DARK_PURPLE}Author:  ${ChatColor.GRAY}${description.authors.first()}")
       server.consoleSender.sendMessage("")
       server.consoleSender.sendMessage("")
    }
