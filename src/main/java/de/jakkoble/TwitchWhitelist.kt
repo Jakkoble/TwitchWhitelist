@@ -2,11 +2,13 @@ package de.jakkoble
 
 import de.jakkoble.Whitelist.isListed
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.event.ClickEvent
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.java.JavaPlugin
+import java.awt.Event
 
 class TwitchWhitelist : JavaPlugin(), Listener {
    companion object {
@@ -17,6 +19,7 @@ class TwitchWhitelist : JavaPlugin(), Listener {
       instance = this
       twitchBot = TwitchBot()
       twitchBot.connect()
+      server.pluginManager.registerEvents(this, this)
    }
    override fun onDisable() {
       twitchBot.disconnect()
@@ -34,6 +37,8 @@ class TwitchWhitelist : JavaPlugin(), Listener {
    }
    @EventHandler
    fun onPlayerJoin(event: PlayerJoinEvent) {
-      if (!event.player.isListed()) event.player.kick(Component.text(Config().getData("notWhitelistedMessage")))
+      if (event.player.isListed()) return
+      event.player.kick(Component.text(String.format(Config().getData("notWhitelistedMessage"),
+         "https://twitch.tv/${twitchBot.getChannelofID(Config().getData("channel")).lowercase()}")))
    }
 }
