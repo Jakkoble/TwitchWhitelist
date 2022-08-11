@@ -11,7 +11,7 @@ import java.util.logging.Level
 
 class TwitchBot {
    private lateinit var twitchClient: TwitchClient
-   private val credential = OAuth2Credential("twitch", TwitchWhitelist.config.getData("token"))
+   private val credential = OAuth2Credential("twitch", Config().getData("token"))
    fun connect(): Unit = runBlocking {
       twitchClient = TwitchClientBuilder.builder()
          .withEnableChat(true)
@@ -26,14 +26,14 @@ class TwitchBot {
       twitchClient.close()
    }
    private fun registerEvent() = runBlocking {
-      twitchClient.pubSub.listenForChannelPointsRedemptionEvents(credential, getChannelID(TwitchWhitelist.config.getData("Channel")))
+      twitchClient.pubSub.listenForChannelPointsRedemptionEvents(credential, getChannelID(Config().getData("Channel")))
       twitchClient.eventManager.onEvent(RewardRedeemedEvent::class.java) { event: RewardRedeemedEvent ->
          if (event.redemption.reward.title.equals("Spotify Songwunsch")) {
             val userName = event.redemption.userInput
             if (Bukkit.getOfflinePlayer(userName).whitelist()) {
                TwitchWhitelist.instance.logger.log(Level.WARNING, "Added Player $userName to the Whitelist.")
-               if (TwitchWhitelist.config.getData("sendResponseMessage").toBoolean())
-                  twitchClient.chat.sendMessage(getChannelID(TwitchWhitelist.config.getData("Channel")), TwitchWhitelist.config.getData("responseMessage"))
+               if (Config().getData("sendResponseMessage").toBoolean())
+                  twitchClient.chat.sendMessage(getChannelID(Config().getData("Channel")), Config().getData("responseMessage"))
             }
          }
       }

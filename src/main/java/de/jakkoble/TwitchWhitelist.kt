@@ -10,11 +10,11 @@ import org.bukkit.plugin.java.JavaPlugin
 class TwitchWhitelist : JavaPlugin(), Listener {
    companion object {
       lateinit var instance: TwitchWhitelist
-      val config = Config()
    }
-   private val twitchBot = TwitchBot()
+   lateinit var twitchBot: TwitchBot
    override fun onEnable() {
       instance = this
+      twitchBot = TwitchBot()
       twitchBot.connect()
    }
    override fun onDisable() {
@@ -22,6 +22,6 @@ class TwitchWhitelist : JavaPlugin(), Listener {
    }
    @EventHandler
    fun onPlayerJoin(event: PlayerJoinEvent) {
-      if (!event.player.isListed()) event.player.kick(Component.text(TwitchWhitelist.config.getData("notWhitelistedMessage")))
+      if (!event.player.isListed()) event.player.kick(Component.text(Config().getData("notWhitelistedMessage")))
    }
 }

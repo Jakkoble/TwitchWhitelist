@@ -4,7 +4,7 @@ import java.io.File
 
 class Config {
    init {
-      if (File("plugins\\TwitchWhitelist\\config").exists()) {
+      if (!File("plugins\\TwitchWhitelist\\config").exists()) {
          val config = TwitchWhitelist.instance.config
          config.set("token", "YourToken")
          config.set("channel", "Jakkoble")
