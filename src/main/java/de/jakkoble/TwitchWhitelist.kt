@@ -11,7 +11,7 @@ class TwitchWhitelist : JavaPlugin(), Listener {
    companion object {
       lateinit var instance: TwitchWhitelist
    }
-   lateinit var twitchBot: TwitchBot
+   private lateinit var twitchBot: TwitchBot
    override fun onEnable() {
       instance = this
       twitchBot = TwitchBot()
