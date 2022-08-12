@@ -14,7 +14,7 @@ class Config {
          config.set("successResponseMessage", "/me %s, you are now Whitelisted on the '%s'.")
          config.set("alreadyWhitelistedResponseMessage", "/me %s, you are already Whitelisted on the '%s'.")
          config.set("alreadyWhitelistedOnePlayerResponseMessage", "/me %s, you have already Whitelisted one Player to the '%s'.")
-         config.set("notWhitelistedMessage", "§cYou are not Whitelisted on this Server! Purchase a Whitelist Slot via Channel Points Reward at: %s")
+         config.set("notWhitelistedMessage", "§cYou are not Whitelisted on this Server! Purchase a Whitelist Slot via Channel Points Reward at %s")
          TwitchWhitelist.instance.saveConfig()
       }
    }
