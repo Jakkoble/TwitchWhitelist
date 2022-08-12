@@ -7,7 +7,7 @@ class Config {
       if (!File("plugins/TwitchWhitelist/config.yml").exists()) {
          val config = TwitchWhitelist.instance.config
          config.set("token", "YourToken")
-         config.set("channel", "YourChannelID")
+         config.set("channelID", "YourChannelID")
          config.set("serverName", "Minecraft Community SMP")
          config.set("chanelRewardName", "Minecraft Server Access")
          config.set("sendResponseMessage", true)
