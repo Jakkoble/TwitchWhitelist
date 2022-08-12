@@ -8,7 +8,6 @@ import de.jakkoble.Whitelist.usedWhitelist
 import de.jakkoble.Whitelist.whitelist
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
-import java.util.logging.Level
 
 class TwitchBot {
    private lateinit var twitchClient: TwitchClient
@@ -46,9 +45,9 @@ class TwitchBot {
          if (event.redemption.reward.title.equals(Config().getData("chanelRewardName"))) {
             val userName = event.redemption.userInput
             val player = Bukkit.getOfflinePlayer(userName)
-            if (player.usedWhitelist()) {
+            if (event.redemption.user.id.usedWhitelist()) {
                twitchClient.chat.sendMessage(getChannelofID(Config().getData("channel")), String.format(Config().getData("alreadyWhitelistedOnePlayerResponseMessage"), userName, Config().getData("serverName")))
-               TwitchWhitelist.instance.server.consoleSender.sendMessage("${ChatColor.YELLOW}User ${event.redemption.user.displayName} alreay Whitelisted one Player.")
+               TwitchWhitelist.instance.server.consoleSender.sendMessage("${ChatColor.YELLOW}User ${event.redemption.user.displayName} already Whitelisted one Player.")
                return@onEvent
             }
             if (!player.whitelist()) {
@@ -56,7 +55,7 @@ class TwitchBot {
                TwitchWhitelist.instance.server.consoleSender.sendMessage("${ChatColor.YELLOW}Player $userName is already Whitelisted.")
                return@onEvent
             }
-            Config().setData("alreadyWhitelisted.${event.redemption.user.displayName}", player.uniqueId.toString())
+            Config().setData("alreadyWhitelisted.${event.redemption.user.id}", player.uniqueId.toString())
             TwitchWhitelist.instance.server.consoleSender.sendMessage("${ChatColor.GREEN}Added Player $userName to the Whitelist.")
             if (Config().getData("sendResponseMessage").toBoolean())
                twitchClient.chat.sendMessage(getChannelofID(Config().getData("channel")), String.format(Config().getData("successResponseMessage"), userName, Config().getData("serverName")))
