@@ -15,7 +15,7 @@ class TwitchBot {
    private val token = Config().getData("token")
    private val credential = OAuth2Credential("twitch", token)
    fun connect() {
-      if (token.length != 30 || Config().getData("channel") == "YourChannelID") {
+      if (token.length != 30 || Config().getData("channelID") == "YourChannelID") {
          TwitchWhitelist.instance.server.consoleSender.sendMessage("")
          TwitchWhitelist.instance.server.consoleSender.sendMessage("${ChatColor.DARK_RED}You have not set the 'Bot Chat Token' or 'ChannelID' in the Config yet! Without these it will not work.")
          TwitchWhitelist.instance.server.consoleSender.sendMessage("${ChatColor.DARK_RED}To get the Access Token, visit: https://twitchtokengenerator.com/")
@@ -31,7 +31,7 @@ class TwitchBot {
          .withEnableHelix(true)
          .withChatAccount(credential)
          .build()
-      val userName = getChannelofID(Config().getData("channel"))
+      val userName = getChannelofID(Config().getData("channelID"))
       if (!twitchClient.chat.isChannelJoined(userName)) twitchClient.chat.joinChannel(userName)
       registerEvent()
    }
@@ -40,25 +40,29 @@ class TwitchBot {
       twitchClient.close()
    }
    private fun registerEvent() {
-      twitchClient.pubSub.listenForChannelPointsRedemptionEvents(credential, Config().getData("channel"))
+      twitchClient.pubSub.listenForChannelPointsRedemptionEvents(credential, Config().getData("channelID"))
       twitchClient.eventManager.onEvent(RewardRedeemedEvent::class.java) { event: RewardRedeemedEvent ->
          if (event.redemption.reward.title.equals(Config().getData("chanelRewardName"))) {
-            val userName = event.redemption.userInput
-            val player = Bukkit.getOfflinePlayer(userName)
+            val playerName = event.redemption.userInput
+
+            val userID = event.redemption.user.id
+            val player = Bukkit.getOfflinePlayer(playerName)
+            val respond = Config().getData("sendResponseMessage").toBoolean()
+
             if (event.redemption.user.id.usedWhitelist()) {
-               twitchClient.chat.sendMessage(getChannelofID(Config().getData("channel")), String.format(Config().getData("alreadyWhitelistedOnePlayerResponseMessage"), userName, Config().getData("serverName")))
+               if (respond) twitchClient.chat.sendMessage(getChannelofID(Config().getData("channelID")), String.format(Config().getData("alreadyWhitelistedOnePlayerResponseMessage"), event.redemption.user.displayName, Config().getData("serverName")))
                TwitchWhitelist.instance.server.consoleSender.sendMessage("${ChatColor.YELLOW}User ${event.redemption.user.displayName} already Whitelisted one Player.")
                return@onEvent
             }
-            if (!player.whitelist()) {
-               twitchClient.chat.sendMessage(getChannelofID(Config().getData("channel")), String.format(Config().getData("alreadyWhitelistedResponseMessage"), userName, Config().getData("serverName")))
-               TwitchWhitelist.instance.server.consoleSender.sendMessage("${ChatColor.YELLOW}Player $userName is already Whitelisted.")
+
+            if (!player.whitelist(userID)) {
+               if (respond) twitchClient.chat.sendMessage(getChannelofID(Config().getData("channelID")), String.format(Config().getData("alreadyWhitelistedResponseMessage"), event.redemption.user.displayName, Config().getData("serverName")))
+               TwitchWhitelist.instance.server.consoleSender.sendMessage("${ChatColor.YELLOW}Player $playerName is already Whitelisted.")
                return@onEvent
             }
-            Config().setData("alreadyWhitelisted.${event.redemption.user.id}", player.uniqueId.toString())
-            TwitchWhitelist.instance.server.consoleSender.sendMessage("${ChatColor.GREEN}Added Player $userName to the Whitelist.")
-            if (Config().getData("sendResponseMessage").toBoolean())
-               twitchClient.chat.sendMessage(getChannelofID(Config().getData("channel")), String.format(Config().getData("successResponseMessage"), userName, Config().getData("serverName")))
+
+            TwitchWhitelist.instance.server.consoleSender.sendMessage("${ChatColor.GREEN}Added Player $playerName to the Whitelist.")
+            if (respond) twitchClient.chat.sendMessage(getChannelofID(Config().getData("channelID")), String.format(Config().getData("successResponseMessage"), event.redemption.user.displayName, Config().getData("serverName")))
          }
       }
    }
