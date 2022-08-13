@@ -1,4 +1,4 @@
-[![CodeFactor](https://www.codefactor.io/repository/github/jakkoble/twitchwhitelist/badge)](https://www.codefactor.io/repository/github/jakkobl/twitchwhitelist)
+[![CodeFactor](https://www.codefactor.io/repository/github/jakkoble/twitchwhitelist/badge)](https://www.codefactor.io/repository/github/jakkoble/twitchwhitelist)
 # TwitchWhitelist
 This is a customisable PaperMC Plugin to **Whitelist Players** via **Twitch Channel Points Rewards**.
 </br>
