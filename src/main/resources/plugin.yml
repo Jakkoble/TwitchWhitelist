@@ -1,5 +1,5 @@
 name: TwitchWhitelist
-version: 1.0
+version: 1.1
 main: de.jakkoble.TwitchWhitelist
 api-version: 1.19
 authors: [ Jakkoble ]

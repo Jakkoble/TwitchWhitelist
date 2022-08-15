@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "de.jakkoble"
-version = "1.0"
+version = "1.1"
 
 repositories {
    mavenCentral()
@@ -20,6 +20,7 @@ dependencies {
    compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
    implementation(kotlin("stdlib-jdk8"))
    implementation("com.github.twitch4j:twitch4j:1.11.0")
+   implementation("com.fasterxml.jackson.core:jackson-databind:2.13.3")
    implementation("com.neovisionaries:nv-websocket-client:2.14")
 }
 
