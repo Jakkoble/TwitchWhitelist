@@ -26,6 +26,8 @@ Be sure to **enable** the Option `Require Viewer to Enter Text` in the Channel P
 You can use either a second Twitch Account or your own Twitch Account for the `token`. You can get your **Bot Chat Token** **[here](https://twitchtokengenerator.com/)**. 
 
 The `channelID` is the ID of your Twitch Account, get it **[here](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/)**.
+
+This Plugin works with a Custom Whitelist, so Vanila Whitelist must be turned off with `whitelist off` in Console.
 </br>
 </br>
 
