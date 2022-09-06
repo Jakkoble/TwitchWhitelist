@@ -4,9 +4,6 @@ import com.github.philippheuer.credentialmanager.domain.OAuth2Credential
 import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.TwitchClientBuilder
 import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
-import de.jakkoble.Whitelist.usedWhitelist
-import de.jakkoble.Whitelist.whitelist
-import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 
 class TwitchBot {
@@ -43,26 +40,41 @@ class TwitchBot {
       twitchClient.pubSub.listenForChannelPointsRedemptionEvents(credential, Config().getData("channelID"))
       twitchClient.eventManager.onEvent(RewardRedeemedEvent::class.java) { event: RewardRedeemedEvent ->
          if (event.redemption.reward.title.equals(Config().getData("chanelRewardName"))) {
-            val playerName = event.redemption.userInput
-
-            val userID = event.redemption.user.id
-            val player = Bukkit.getOfflinePlayer(playerName)
+            val playerName = event.redemption.userInput ?: return@onEvent
+            val userID = event.redemption.user.id ?: return@onEvent
             val respond = Config().getData("sendResponseMessage").toBoolean()
-
-            if (event.redemption.user.id.usedWhitelist()) {
-               if (respond) twitchClient.chat.sendMessage(getChannelofID(Config().getData("channelID")), String.format(Config().getData("alreadyWhitelistedOnePlayerResponseMessage"), event.redemption.user.displayName, Config().getData("serverName")))
+            val userData = playerName.getUserDataFromName()
+            if (userData == null || playerName.length > 25) {
+               if (respond) twitchClient.chat.sendMessage(getChannelofID(Config().getData("channelID")), String.format(
+                  Config().getData("noPlayerFoundResponseMessage"),
+                  event.redemption.user.displayName,
+                  playerName))
+               TwitchWhitelist.instance.server.consoleSender.sendMessage("${ChatColor.YELLOW}There is no Player called $playerName.")
+               return@onEvent
+            }
+            val uuid = userData.id
+            if (Whitelist().usedWhitelist(userID)) {
+               if (respond) twitchClient.chat.sendMessage(getChannelofID(Config().getData("channelID")), String.format(
+                     Config().getData("alreadyWhitelistedOnePlayerResponseMessage"),
+                     event.redemption.user.displayName,
+                     if(Config().getData("ticketsPerUser").toInt() == 1) "one Player" else "${Config().getData("ticketsPerUser")} Players",
+                     Config().getData("serverName")))
                TwitchWhitelist.instance.server.consoleSender.sendMessage("${ChatColor.YELLOW}User ${event.redemption.user.displayName} already Whitelisted one Player.")
                return@onEvent
             }
 
-            if (!player.whitelist(userID)) {
-               if (respond) twitchClient.chat.sendMessage(getChannelofID(Config().getData("channelID")), String.format(Config().getData("alreadyWhitelistedResponseMessage"), event.redemption.user.displayName, Config().getData("serverName")))
+            if (!Whitelist().whitelist(UserData(playerName, uuid, userID))) {
+               if (respond) twitchClient.chat.sendMessage(
+                  getChannelofID(Config().getData("channelID")),
+                  String.format(Config().getData("alreadyWhitelistedResponseMessage"), event.redemption.user.displayName, Config().getData("serverName")))
                TwitchWhitelist.instance.server.consoleSender.sendMessage("${ChatColor.YELLOW}Player $playerName is already Whitelisted.")
                return@onEvent
             }
 
             TwitchWhitelist.instance.server.consoleSender.sendMessage("${ChatColor.GREEN}Added Player $playerName to the Whitelist.")
-            if (respond) twitchClient.chat.sendMessage(getChannelofID(Config().getData("channelID")), String.format(Config().getData("successResponseMessage"), event.redemption.user.displayName, Config().getData("serverName")))
+            if (respond) twitchClient.chat.sendMessage(
+               getChannelofID(Config().getData("channelID")),
+               String.format(Config().getData("successResponseMessage"), event.redemption.user.displayName, Config().getData("serverName")))
          }
       }
    }
