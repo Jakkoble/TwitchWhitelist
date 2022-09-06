@@ -36,7 +36,7 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
             if (Whitelist().playerNames().isEmpty()) sender.sendMessage("No Player is Whitelisted")
             else {
                val playerNames = Whitelist().playerNames()
-               sender.sendMessage("${ChatColor.GOLD}There ${if(playerNames.size == 1) "is one Player" else "are ${playerNames.size} Player"} whitelisted.")
+               sender.sendMessage("${ChatColor.GOLD}There ${if(playerNames.size == 1) "is one Player" else "are ${playerNames.size} Players"} whitelisted.")
                val message = StringBuilder()
                playerNames.forEach { message.append(if (playerNames.indexOf(it) != playerNames.size - 1) "$it, " else it) }
                sender.sendMessage(message.substring(0))
