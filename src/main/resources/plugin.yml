@@ -2,6 +2,11 @@ name: TwitchWhitelist
 version: 1.3
 main: de.jakkoble.TwitchWhitelist
 api-version: 1.16
-authors: [ Jakkoble ]
+author: Jakkoble
 description: Whitelist Players via Twitch Channel Points Reward
-website: https://jakkoble.de
+website: https://twitch.tv/jakkoble
+
+commands:
+  whitelist:
+    description: Manage the whitelisted Members
+    permission: whitelist.cmd
