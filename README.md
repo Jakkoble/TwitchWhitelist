@@ -4,7 +4,7 @@ This is a customisable PaperMC Plugin to **Whitelist Players** via **Twitch Chan
 </br>
 ## Setup
 1. Setup a PaperMC Minecraft Server like **[here](https://docs.papermc.io/paper/getting-started)**
-2. Download the **[latest Release File](https://github.com/jakkoble/TwitchWhitelist/releases/)**
+2. Download the **[latest Release File](https://github.com/jakkoble/TwitchWhitelist/releases/latest)**
 3. Put the downloaded **TwitchWhitelist.jar** into the `/plugins/` folder of the created PaperMC Server
 4. Start the Server via your Start Script (`start.bat` or `start.sh`)
 5. After the Server finished starting, stop it (Type `stop` in Console)
