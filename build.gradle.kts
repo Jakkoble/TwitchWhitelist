@@ -20,7 +20,7 @@ dependencies {
    compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
    implementation(kotlin("stdlib-jdk8"))
    implementation("com.github.twitch4j:twitch4j:1.11.0")
-   implementation("com.fasterxml.jackson.core:jackson-databind:2.13.3")
+   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
    implementation("com.neovisionaries:nv-websocket-client:2.14")
 }
 
