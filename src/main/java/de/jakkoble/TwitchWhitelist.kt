@@ -6,8 +6,6 @@ import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent
-import org.bukkit.event.player.PlayerKickEvent
-import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.java.JavaPlugin
 
 class TwitchWhitelist : JavaPlugin(), Listener {
@@ -41,14 +39,5 @@ class TwitchWhitelist : JavaPlugin(), Listener {
       if (player == null || player.isListed()) return
       event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, String.format(Config().getData("notWhitelistedMessage"),
          "https://twitch.tv/${twitchBot.getChannelofID(Config().getData("channelID")).lowercase()}"))
-   }
-
-   @EventHandler
-   fun onPlayerLeft(event: PlayerKickEvent) {
-      if (!event.player.isListed()) event.leaveMessage = ""
-   }
-   @EventHandler
-   fun onPlayerQuit(event: PlayerQuitEvent) {
-      if (!event.player.isListed()) event.quitMessage = ""
    }
 }
