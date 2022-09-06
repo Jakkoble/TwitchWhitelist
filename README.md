@@ -22,6 +22,17 @@ Be sure to **enable** the Option `Require Viewer to Enter Text` in the Channel P
 </br>
 </br>
 
+## Whitelist Command
+Permission: `whitelist.cmd`
+#### Commands
+`whitelist on` — Enable the Whitelist on your Server </br>
+`whitelist off` — Disable the Whitelist on your Server </br>
+`whitelist list` — Get an overview over all Whitelisted Players </br>
+`whitelist add playerName` — Add a Player to the Whitelist manually by the Minecraft Player Name </br>
+`whitelist remove playerName` — Remove a Player from the Whitelist by the Minecraft Player Name </br>
+</br>
+
+
 ## Further Information
 You can use either a second Twitch Account or your own Twitch Account for the `token`. You can get your **Bot Chat Token** **[here](https://twitchtokengenerator.com/)**. 
 
