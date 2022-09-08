@@ -1,15 +1,15 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/jakkoble/twitchwhitelist/badge)](https://www.codefactor.io/repository/github/jakkoble/twitchwhitelist)
 # TwitchWhitelist
-This is a customisable PaperMC Plugin to **Whitelist Players** via **Twitch Channel Points Rewards**.
+This is a customisable 1.8-1.19 Spigot Plugin to **Whitelist Players** via **Twitch Channel Points Rewards**.
 </br>
 ## Setup
-1. Setup a PaperMC Minecraft Server like **[here](https://docs.papermc.io/paper/getting-started)**
+1. Setup a **PaperMC (recommented)** or **SpigotMC** Minecraft Server like **[here](https://docs.papermc.io/paper/getting-started#downloading-paper)**
 2. Download the **[latest Release File](https://github.com/jakkoble/TwitchWhitelist/releases/latest)**
 3. Put the downloaded **TwitchWhitelist.jar** into the `/plugins/` folder of the created PaperMC Server
 4. Start the Server via your Start Script (`start.bat` or `start.sh`)
 5. After the Server finished starting, stop it (Type `stop` in Console)
 6. Navigate in your `/plugin/` folder and then in the `/TwitchWhitelist/` folder
-7. Open the config.yml File set it up for your needs (You must set the `token` and `channelID` => See **[Further Information](#further-information)**)
+7. Open the `config.yml` File set it up for your needs (You must set the `token` and `channelID` => See **[Further Information](#further-information)**)
 8. Start the Server again and everything should work, have fun :)
 </br>
 
@@ -34,7 +34,7 @@ Permission: `whitelist.cmd`
 
 
 ## Further Information
-You can use either a second Twitch Account or your own Twitch Account for the `token`. You can get your **Bot Chat Token** **[here](https://twitchtokengenerator.com/)**. 
+You can use either a second Twitch Account or your own Twitch Account for the `token`. You can get your **Bot Chat Token** => Access Token **[here](https://twitchtokengenerator.com/)**. 
 
 The `channelID` is the ID of your Twitch Account, get it **[here](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/)**.
 
