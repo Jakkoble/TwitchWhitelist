@@ -3,7 +3,7 @@
 This is a customisable 1.8-1.19 Spigot Plugin to **Whitelist Players** via **Twitch Channel Points Rewards**.
 </br>
 ## Setup
-1. Setup a **PaperMC (recommented)** or **SpigotMC** Minecraft Server like **[here](https://docs.papermc.io/paper/getting-started#downloading-paper)**
+1. Setup a **PaperMC (recommended)** or **SpigotMC** Minecraft Server like **[here](https://docs.papermc.io/paper/getting-started#downloading-paper)**
 2. Download the **[latest Release File](https://github.com/jakkoble/TwitchWhitelist/releases/latest)**
 3. Put the downloaded **TwitchWhitelist.jar** into the `/plugins/` folder of the created PaperMC Server
 4. Start the Server via your Start Script (`start.bat` or `start.sh`)
