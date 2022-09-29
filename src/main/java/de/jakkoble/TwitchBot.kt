@@ -9,6 +9,7 @@ import org.bukkit.ChatColor
 class TwitchBot {
    private lateinit var twitchClient: TwitchClient
    private var available = true
+   private lateinit var userName: String
    private val token = Config().getData("token")
    private val credential = OAuth2Credential("twitch", token)
    fun connect() {
@@ -28,12 +29,13 @@ class TwitchBot {
          .withEnableHelix(true)
          .withChatAccount(credential)
          .build()
-      val userName = getChannelofID(Config().getData("channelID"))
+      userName = getChannelofID(Config().getData("channelID"))
       if (!twitchClient.chat.isChannelJoined(userName)) twitchClient.chat.joinChannel(userName)
       registerEvent()
    }
    fun disconnect() {
       if (!available) return
+      twitchClient.chat.leaveChannel(userName)
       twitchClient.close()
    }
    private fun registerEvent() {
