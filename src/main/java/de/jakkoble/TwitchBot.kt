@@ -3,14 +3,16 @@ package de.jakkoble
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential
 import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.TwitchClientBuilder
+import com.github.twitch4j.pubsub.PubSubSubscription
 import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
 import org.bukkit.ChatColor
 
 class TwitchBot {
    private lateinit var twitchClient: TwitchClient
-   private var available = true
+   var available = true
    private lateinit var userName: String
    private val credential = OAuth2Credential("twitch", chatToken)
+   private lateinit var subscription: PubSubSubscription
    fun connect() {
       if (chatToken.length != 30 || channelID == "YourChannelID") {
          TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("")
@@ -35,10 +37,12 @@ class TwitchBot {
    fun disconnect() {
       if (!available) return
       twitchClient.chat.leaveChannel(userName)
+      twitchClient.pubSub.unsubscribeFromTopic(subscription)
+      twitchClient.pubSub.disconnect()
       twitchClient.close()
    }
    private fun registerEvent() {
-      twitchClient.pubSub.listenForChannelPointsRedemptionEvents(credential, channelID)
+      subscription = twitchClient.pubSub.listenForChannelPointsRedemptionEvents(credential, channelID)
       twitchClient.eventManager.onEvent(RewardRedeemedEvent::class.java) { event: RewardRedeemedEvent ->
          if (event.redemption.reward.title.equals(channelRewardName)) {
             val playerName = event.redemption.userInput ?: return@onEvent
