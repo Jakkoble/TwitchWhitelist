@@ -19,6 +19,7 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
                return true
             }
             Config().setData(ConfigEntry.ENABLED, true)
+            enabled = true
             sender.sendMessage("$prefix You have enabled the TwitchWhitelist.")
             return true
          }
@@ -28,6 +29,7 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
                return true
             }
             Config().setData(ConfigEntry.ENABLED, false)
+            enabled = false
             sender.sendMessage("$prefix You have disabled the TwitchWhitelist.")
             return true
          }
@@ -52,7 +54,7 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
       val playerName = args[1]
       when(args[0]) {
          "add" -> {
-            val userData = Whitelist().userDataByName(playerName)
+            val userData = playerName.getUserDataFromName()
             if (userData == null || playerName.length > 25) {
                sender.sendMessage("$prefix There is no Player called $playerName")
                TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}There is no Player called $playerName.")
@@ -60,7 +62,7 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
             }
             if (Whitelist().whitelist(UserData(
                   name = playerName,
-                  uuid = userData.uuid,
+                  uuid = userData.id,
                   twitchUserID = channelID))) {
                sender.sendMessage("$prefix You have added $playerName to the Whitelist.")
                TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.GREEN}Added Player $playerName to the Whitelist.")
