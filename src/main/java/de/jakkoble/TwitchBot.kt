@@ -10,10 +10,9 @@ class TwitchBot {
    private lateinit var twitchClient: TwitchClient
    private var available = true
    private lateinit var userName: String
-   private val token = chatToken
-   private val credential = OAuth2Credential("twitch", token)
+   private val credential = OAuth2Credential("twitch", chatToken)
    fun connect() {
-      if (token.length != 30 || channelID == "YourChannelID") {
+      if (chatToken.length != 30 || channelID == "YourChannelID") {
          TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("")
          TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.DARK_RED}You have not set the 'Bot Chat Token' or 'ChannelID' in the Config yet! Without these it will not work.")
          TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.DARK_RED}To get the Access Token, visit: https://twitchtokengenerator.com/")
@@ -77,5 +76,5 @@ class TwitchBot {
          }
       }
    }
-   fun getChannelofID(id: String): String = twitchClient.helix.getUsers(token, mutableListOf(id), null).execute().users.first().displayName
+   fun getChannelofID(id: String): String = twitchClient.helix.getUsers(chatToken, mutableListOf(id), null).execute().users.first().displayName
 }
