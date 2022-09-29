@@ -18,6 +18,7 @@ class Whitelist {
          whitelistFile.writeText(GsonBuilder().setPrettyPrinting().create().toJson(whitelist))
       }
    }
+   fun load() = whitelist.addAll(GsonBuilder().setPrettyPrinting().create().fromJson(whitelistFile.readText(), object : TypeToken<List<UserData>>() {}.type))
    fun whitelist(userData: UserData): Boolean {
       if (isWhitelisted(userData.uuid)) return false
       whitelist.add(userData)
@@ -30,21 +31,14 @@ class Whitelist {
       whitelistFile.writeText(GsonBuilder().setPrettyPrinting().create().toJson(whitelist))
       return true
    }
-   fun isWhitelisted(uuid: String): Boolean {
-      whitelist.forEach { if (it.uuid == uuid) return true }
-      return false
-   }
-   fun playerNames(): List<String> {
-      val playerNames = mutableListOf<String>()
-      whitelist.forEach { playerNames.add(it.name) }
-      return playerNames
-   }
-   fun load() = whitelist.addAll(GsonBuilder().setPrettyPrinting().create().fromJson(whitelistFile.readText(), object : TypeToken<List<UserData>>() {}.type))
+   fun isWhitelisted(uuid: String): Boolean = whitelist.any { it.uuid == uuid.replace("-", "") }
+   fun playerNames(): List<String> = whitelist.map { it.name }
    fun usedWhitelist(twitchUserID: String): Boolean {
-      if (twitchUserID == Config().getData("channelID")) return false
-      if (whitelist.count { it.twitchUserID == twitchUserID } >= Config().getData("ticketsPerUser").toInt()) return true
+      if (twitchUserID == channelID) return false
+      if (whitelist.count { it.twitchUserID == twitchUserID } >= ticketPerUser) return true
       return false
    }
+   fun userDataByName(name: String): UserData? = whitelist.firstOrNull { it.name == name }
 }
 data class UserData(val name: String, val uuid: String, val twitchUserID: String)
 
