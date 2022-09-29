@@ -42,7 +42,7 @@ class TwitchWhitelist : JavaPlugin(), Listener {
    }
    @EventHandler
    fun onPlayerJoin(event: AsyncPlayerPreLoginEvent) {
-      println(event.uniqueId.toString())
+      if (!twitchBot.available) return
       if (!config.getBoolean("enabled") || Whitelist().isWhitelisted(event.uniqueId.toString())) return
       event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, String.format(notWhitelistedText,
          "https://twitch.tv/${twitchBot.getChannelofID(channelID).lowercase()}"))
