@@ -7,25 +7,24 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.bukkit.plugin.java.JavaPlugin
 
-val prefix = "${ChatColor.GOLD}Whitelist ${ChatColor.GRAY}> "
 class TwitchWhitelist : JavaPlugin(), Listener {
    companion object {
-      lateinit var instance: TwitchWhitelist
+      lateinit var INSTANCE: TwitchWhitelist
    }
    private lateinit var twitchBot: TwitchBot
    override fun onEnable() {
-      instance = this
+      INSTANCE = this
+      Config().load()
+      Whitelist().load()
+
       twitchBot = TwitchBot()
       twitchBot.connect()
-
-      Config()
-      Whitelist().load()
 
       server.pluginManager.registerEvents(this, this)
       getCommand("whitelist").executor = WhitelistCommand()
       getCommand("whitelist").tabCompleter = WhitelistCommand()
 
-      if (Config().getData("enabled").toBoolean() && Bukkit.hasWhitelist()) Bukkit.setWhitelist(false)
+      if (enabled && Bukkit.hasWhitelist()) Bukkit.setWhitelist(false)
    }
    override fun onDisable() {
       twitchBot.disconnect()
@@ -43,9 +42,9 @@ class TwitchWhitelist : JavaPlugin(), Listener {
    }
    @EventHandler
    fun onPlayerJoin(event: AsyncPlayerPreLoginEvent) {
-      val isWhitelisted = event.name.getUserDataFromName()?.id?.let { Whitelist().isWhitelisted(it) }
-      if (!config.getBoolean("enabled") || isWhitelisted == true) return
-      event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, String.format(Config().getData("notWhitelistedMessage"),
-         "https://twitch.tv/${twitchBot.getChannelofID(Config().getData("channelID")).lowercase()}"))
+      println(event.uniqueId.toString())
+      if (!config.getBoolean("enabled") || Whitelist().isWhitelisted(event.uniqueId.toString())) return
+      event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, String.format(notWhitelistedText,
+         "https://twitch.tv/${twitchBot.getChannelofID(channelID).lowercase()}"))
    }
 }
