@@ -6,6 +6,7 @@ import com.github.twitch4j.TwitchClientBuilder
 import com.github.twitch4j.pubsub.PubSubSubscription
 import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
 import org.bukkit.ChatColor
+import java.util.regex.Pattern
 
 class TwitchBot {
    private lateinit var twitchClient: TwitchClient
@@ -47,8 +48,10 @@ class TwitchBot {
          if (event.redemption.reward.title.equals(channelRewardName)) {
             val playerName = event.redemption.userInput ?: return@onEvent
             val userID = event.redemption.user.id ?: return@onEvent
-            val userData = playerName.getUserDataFromName()
-            if (userData == null || playerName.length > 25) {
+            val withSpecialCharacters = Pattern.compile("[^A-Za-z0-9]").matcher(playerName).find()
+            val userData = if (!withSpecialCharacters) playerName.getUserDataFromName() else null
+            @Suppress("KotlinConstantConditions")
+            if (userData == null || playerName.length > 25 || withSpecialCharacters) {
                if (sendMessage) twitchClient.chat.sendMessage(getChannelofID(channelID), String.format(
                   playerNotFoundMessage,
                   event.redemption.user.displayName,
