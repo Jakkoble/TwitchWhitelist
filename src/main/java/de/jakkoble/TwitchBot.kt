@@ -48,7 +48,7 @@ class TwitchBot {
          if (event.redemption.reward.title.equals(channelRewardName)) {
             val playerName = event.redemption.userInput ?: return@onEvent
             val userID = event.redemption.user.id ?: return@onEvent
-            val withSpecialCharacters = Pattern.compile("[^A-Za-z0-9]").matcher(playerName).find()
+            val withSpecialCharacters = Pattern.compile("[^A-Za-z0-9_]").matcher(playerName).find()
             val userData = if (!withSpecialCharacters) playerName.getUserDataFromName() else null
             @Suppress("KotlinConstantConditions")
             if (userData == null || playerName.length > 25 || withSpecialCharacters) {
