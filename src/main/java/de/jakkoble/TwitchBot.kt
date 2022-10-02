@@ -46,7 +46,7 @@ class TwitchBot {
       subscription = twitchClient.pubSub.listenForChannelPointsRedemptionEvents(credential, channelID)
       twitchClient.eventManager.onEvent(RewardRedeemedEvent::class.java) { event: RewardRedeemedEvent ->
          if (event.redemption.reward.title.equals(channelRewardName)) {
-            val playerName = event.redemption.userInput ?: return@onEvent
+            val playerName = (event.redemption.userInput ?: return@onEvent).replace(" ", "")
             val userID = event.redemption.user.id ?: return@onEvent
             val withSpecialCharacters = Pattern.compile("[^A-Za-z0-9_]").matcher(playerName).find()
             val userData = if (!withSpecialCharacters) playerName.getUserDataFromName() else null
