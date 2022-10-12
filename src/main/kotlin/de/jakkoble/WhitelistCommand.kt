@@ -91,12 +91,12 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
    }
    private fun CommandSender.sendUsage() {
       sendMessage("")
-      sendMessage("$prefix ${ChatColor.YELLOW}Usage")
-      sendMessage("$prefix whitelist on")
-      sendMessage("$prefix whitelist off")
-      sendMessage("$prefix whitelist list")
-      sendMessage("$prefix whitelist add playerName")
-      sendMessage("$prefix whitelist remove playerName")
+      sendMessage("${ChatColor.YELLOW}Usage")
+      sendMessage("whitelist on")
+      sendMessage("whitelist off")
+      sendMessage("whitelist list")
+      sendMessage("whitelist add playerName")
+      sendMessage("whitelist remove playerName")
       sendMessage("")
    }
    override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): MutableList<String> {
