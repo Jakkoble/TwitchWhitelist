@@ -91,7 +91,7 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
    }
    private fun CommandSender.sendUsage() {
       sendMessage("")
-      sendMessage("${ChatColor.YELLOW}Usage")
+      sendMessage("${ChatColor.GOLD}Usage")
       sendMessage("whitelist on")
       sendMessage("whitelist off")
       sendMessage("whitelist list")
