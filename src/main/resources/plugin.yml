@@ -5,7 +5,9 @@ api-version: 1.16
 author: Jakkoble
 description: Whitelist Players via Twitch Channel Points Reward
 website: https://twitch.tv/jakkoble
-
+libraries:
+  - "org.jetbrains.kotlin:kotlin-stdlib:1.7.10"
+  - "com.github.twitch4j:twitch4j:1.12.0"
 commands:
   whitelist:
     description: Manage the whitelisted Members
