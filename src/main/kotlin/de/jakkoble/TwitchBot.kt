@@ -24,6 +24,15 @@ class TwitchBot {
          available = false
          return
       }
+      if (TwitchWhitelist.INSTANCE.server.onlineMode == offlineServer) {
+         TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("")
+         TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.DARK_RED}Config Conflict Detected!")
+         TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.DARK_RED}The Server offlineServer (in config.yml) must be set to '${!offlineServer}'")
+         TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.DARK_RED}Reason: Property online-mode (in server.properties) is set to '${TwitchWhitelist.INSTANCE.server.onlineMode}'")
+         TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("")
+         available = false
+         return
+      }
       twitchClient = TwitchClientBuilder.builder()
          .withEnableChat(true)
          .withEnablePubSub(true)
