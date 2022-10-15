@@ -38,7 +38,8 @@ You can use either a second Twitch Account or your own Twitch Account for the `t
 
 The `channelID` is the ID of your Twitch Account, get it **[here](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/)**.
 
-This Plugin works with a Custom Whitelist, so Vanila Whitelist must be turned off with `whitelist off` in Console.
+**Attention: By enabeling Offline Servers the Plugin will not work on Online Servers until you disable it again.** </br>
+You open yourself an security risk with offline servers. To solve this use third party solutions like **[AuthMeReloaded](https://www.spigotmc.org/resources/authmereloaded.6269/)**.
 </br>
 </br>
 
