@@ -5,6 +5,7 @@ enum class ConfigEntry(val path: String) {
    ENABLED("enabled"),
    TOKEN("token"),
    CHANNEL_ID("channelID"),
+   OFFLINE_SERVER("offlineServer"),
    TICEKTS_PER_USER("ticketsPerUser"),
    SERVER_NAME("serverName"),
    CHANNEL_REWARD_NAME("channelRewardName"),
@@ -12,7 +13,7 @@ enum class ConfigEntry(val path: String) {
    SUCCESS_MESSAGE("successMessage"),
    PLAYER_NOT_FOUND_MESSAGE("playerNotFoundMessage"),
    ALREADY_WHITELISTED_MESSAGE("alreadyWhitelistedMessage"),
-   ALREADY_WHITELISTED_ONE_PLAYER_MESSAGE("alreadyWhitelistedOnePlayerMessage"),
+   TOO_MANY_PLAYERS_WHITELISTED_MESSAGE("tooManyPlayersWhitelisted"),
    NOT_WHITELISTED_TEXT("notWhitelistedMessage")
 }
 
@@ -23,6 +24,7 @@ class Config {
          config.set(ConfigEntry.ENABLED.path, true)
          config.set(ConfigEntry.TOKEN.path, "YourToken")
          config.set(ConfigEntry.CHANNEL_ID.path, "YourChannelID")
+         config.set(ConfigEntry.OFFLINE_SERVER.path, false)
          config.set(ConfigEntry.TICEKTS_PER_USER.path, 1)
          config.set(ConfigEntry.SERVER_NAME.path, "Minecraft Community SMP")
          config.set(ConfigEntry.CHANNEL_REWARD_NAME.path, "Minecraft Whitelist Ticket")
@@ -30,7 +32,7 @@ class Config {
          config.set(ConfigEntry.SUCCESS_MESSAGE.path, "/me %s, you are now Whitelisted on the '%s'.")
          config.set(ConfigEntry.PLAYER_NOT_FOUND_MESSAGE.path, "/me %s, there is no Player called '%s'.")
          config.set(ConfigEntry.ALREADY_WHITELISTED_MESSAGE.path, "/me %s, you are already Whitelisted on the '%s'.")
-         config.set(ConfigEntry.ALREADY_WHITELISTED_ONE_PLAYER_MESSAGE.path, "/me %s, you have already Whitelisted %s to the '%s'.")
+         config.set(ConfigEntry.TOO_MANY_PLAYERS_WHITELISTED_MESSAGE.path, "/me %s, you have already Whitelisted to many Players to the '%s'.")
          config.set(ConfigEntry.NOT_WHITELISTED_TEXT.path, "§cYou are not Whitelisted on this Server! Purchase a Whitelist Slot via Channel Points Reward at '%s'.")
          TwitchWhitelist.INSTANCE.saveConfig()
       }
@@ -39,6 +41,7 @@ class Config {
       enabled = TwitchWhitelist.INSTANCE.config.getBoolean(ConfigEntry.ENABLED.path)
       chatToken = getString(ConfigEntry.TOKEN)
       channelID = getString(ConfigEntry.CHANNEL_ID)
+      offlineServer = TwitchWhitelist.INSTANCE.config.getBoolean(ConfigEntry.OFFLINE_SERVER.path)
       ticketPerUser = TwitchWhitelist.INSTANCE.config.getInt(ConfigEntry.TICEKTS_PER_USER.path)
       serverName = getString(ConfigEntry.SERVER_NAME)
       channelRewardName = getString(ConfigEntry.CHANNEL_REWARD_NAME)
@@ -46,7 +49,7 @@ class Config {
       successMessage = getString(ConfigEntry.SUCCESS_MESSAGE)
       playerNotFoundMessage = getString(ConfigEntry.PLAYER_NOT_FOUND_MESSAGE)
       alreadyWhitelistedMessage = getString(ConfigEntry.ALREADY_WHITELISTED_MESSAGE)
-      alreadyWhitelistedOnePlayerMessage = getString(ConfigEntry.ALREADY_WHITELISTED_ONE_PLAYER_MESSAGE)
+      tooManyPlayersWhitelistedMessage = getString(ConfigEntry.TOO_MANY_PLAYERS_WHITELISTED_MESSAGE)
       notWhitelistedText = getString(ConfigEntry.NOT_WHITELISTED_TEXT)
    }
    private fun getString(entry: ConfigEntry): String = TwitchWhitelist.INSTANCE.config.getString(entry.path) ?: "Content not Found"
