@@ -20,18 +20,19 @@ class Whitelist {
    }
    fun load() = whitelist.addAll(GsonBuilder().setPrettyPrinting().create().fromJson(whitelistFile.readText(), object : TypeToken<List<UserData>>() {}.type))
    fun whitelist(userData: UserData): Boolean {
-      if (isWhitelisted(userData.uuid)) return false
+      if (isWhitelisted(userData.uuid, userData.name)) return false
       whitelist.add(userData)
       whitelistFile.writeText(GsonBuilder().setPrettyPrinting().create().toJson(whitelist))
       return true
    }
-   fun unwhitelist(uuid: String): Boolean {
-      if (!isWhitelisted(uuid)) return false
-      whitelist.removeIf { it.uuid == uuid }
+   fun unwhitelist(uuid: String, name: String): Boolean {
+      if (!isWhitelisted(uuid, name)) return false
+      whitelist.removeIf { it.uuid == uuid && it.name == name}
       whitelistFile.writeText(GsonBuilder().setPrettyPrinting().create().toJson(whitelist))
       return true
    }
-   fun isWhitelisted(uuid: String): Boolean = whitelist.any { it.uuid == uuid.replace("-", "") }
+   fun isWhitelisted(uuid: String, name: String): Boolean = if (offlineServer) whitelist.any { it.name == name}
+      else whitelist.any { it.uuid == uuid.replace("-", "") }
    fun playerNames(): List<String> = whitelist.map { it.name }
    fun usedWhitelist(twitchUserID: String): Boolean {
       if (twitchUserID == channelID) return false
