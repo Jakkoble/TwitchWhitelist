@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "de.jakkoble"
-version = "1.7"
+version = "2.0"
 
 repositories {
    mavenCentral()
