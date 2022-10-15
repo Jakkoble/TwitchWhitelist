@@ -124,7 +124,7 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
       if (args.size == 1) {
          tabList.addAll(listOf("on", "off", "list", "add", "remove"))
          return tabList
-      } else if (args.size == 2 && (args[0] == "remove"))
+      } else if (args.size == 2 && args[0] == "remove")
          tabList.addAll(Whitelist().playerNames())
       return tabList
    }
