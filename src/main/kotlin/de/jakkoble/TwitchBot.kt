@@ -11,7 +11,6 @@ import java.util.regex.Pattern
 class TwitchBot {
    private lateinit var twitchClient: TwitchClient
    var available = true
-   private lateinit var userName: String
    private val credential = OAuth2Credential("twitch", chatToken)
    private lateinit var subscription: PubSubSubscription
    fun connect() {
@@ -20,7 +19,7 @@ class TwitchBot {
          TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.DARK_RED}You have not set the 'Bot Chat Token' or 'ChannelID' in the Config yet! Without these it will not work.")
          TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.DARK_RED}To get the Access Token, visit: https://twitchtokengenerator.com/")
          TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.DARK_RED}To get the ChannelID aka TwitchID, visit: https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/")
-         TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.DARK_RED}Stop the Server, Setup the Config for your needs and Start the Server again.")
+         TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.DARK_RED}Stop the Server, Setup the Config for your needs and Start the Server again. For more Information or Help visit the Plugin on GitHub: https://github.com/Jakkoble/TwitchWhitelist")
          TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("")
          available = false
          return
@@ -31,13 +30,16 @@ class TwitchBot {
          .withEnableHelix(true)
          .withChatAccount(credential)
          .build()
-      userName = getChannelofID(channelID)
-      if (!twitchClient.chat.isChannelJoined(userName)) twitchClient.chat.joinChannel(userName)
+      ownerChannelName = getChannelofID(channelID)
+      if (!twitchClient.chat.isChannelJoined(ownerChannelName)) twitchClient.chat.joinChannel(ownerChannelName)
       registerEvent()
+      TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("")
+      TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.GREEN}Successfully connected to Twitch Channel ${ownerChannelName}!")
+      TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("")
    }
    fun disconnect() {
       if (!available) return
-      twitchClient.chat.leaveChannel(userName)
+      twitchClient.chat.leaveChannel(ownerChannelName)
       twitchClient.pubSub.unsubscribeFromTopic(subscription)
       twitchClient.pubSub.disconnect()
       twitchClient.close()
@@ -48,6 +50,10 @@ class TwitchBot {
          if (event.redemption.reward.title.equals(channelRewardName)) {
             val playerName = (event.redemption.userInput ?: return@onEvent).replace(" ", "")
             val userID = event.redemption.user.id ?: return@onEvent
+            if (offlineServer) {
+               handleOfflineServer(playerName, userID, event.redemption.user.displayName)
+               return@onEvent
+            }
             val withSpecialCharacters = Pattern.compile("[^A-Za-z0-9_]").matcher(playerName).find()
             val userData = if (!withSpecialCharacters) playerName.getUserDataFromName() else null
             @Suppress("KotlinConstantConditions")
@@ -62,17 +68,14 @@ class TwitchBot {
             val uuid = userData.id
             if (Whitelist().usedWhitelist(userID)) {
                if (sendMessage) twitchClient.chat.sendMessage(getChannelofID(channelID), String.format(
-                     alreadyWhitelistedOnePlayerMessage,
+                     tooManyPlayersWhitelistedMessage,
                      event.redemption.user.displayName,
-                     if(ticketPerUser == 1) "one Player" else "$ticketPerUser Players",
                      serverName))
-               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}User ${event.redemption.user.displayName} already Whitelisted one Player.")
+               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}User ${event.redemption.user.displayName} already Whitelisted too many Players.")
                return@onEvent
             }
             if (!Whitelist().whitelist(UserData(playerName, uuid, userID))) {
-               if (sendMessage) twitchClient.chat.sendMessage(
-                  getChannelofID(channelID),
-                  String.format(alreadyWhitelistedMessage, event.redemption.user.displayName, serverName))
+               if (sendMessage) twitchClient.chat.sendMessage(getChannelofID(channelID), String.format(alreadyWhitelistedMessage, event.redemption.user.displayName, serverName))
                TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}Player $playerName is already Whitelisted.")
                return@onEvent
             }
@@ -83,5 +86,27 @@ class TwitchBot {
          }
       }
    }
-   fun getChannelofID(id: String): String = twitchClient.helix.getUsers(chatToken, mutableListOf(id), null).execute().users.first().displayName
+   private fun handleOfflineServer(playerName: String, userID: String, twitchUserName: String) {
+      if (Whitelist().usedWhitelist(userID)) {
+         if (sendMessage) twitchClient.chat.sendMessage(getChannelofID(channelID), String.format(
+            tooManyPlayersWhitelistedMessage,
+            twitchUserName,
+            serverName))
+         TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}User $twitchUserName already Whitelisted to many Players. (Offline Server)")
+         return
+      }
+      if (!Whitelist().whitelist(UserData(
+            name = playerName,
+            uuid = "OFFLINEPLAYER",
+            twitchUserID = userID
+         ))) {
+         if (sendMessage) twitchClient.chat.sendMessage(getChannelofID(channelID), String.format(alreadyWhitelistedMessage, twitchUserName, serverName))
+         TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}Player $playerName is already Whitelisted. (Offline Server)")
+         return
+      }
+      TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.GREEN}Added Player $playerName to the Whitelist. (Offline Server)")
+      if (sendMessage) twitchClient.chat.sendMessage(getChannelofID(channelID), String.format(successMessage, twitchUserName, serverName))
+      return
+   }
+   private fun getChannelofID(id: String): String = twitchClient.helix.getUsers(chatToken, mutableListOf(id), null).execute().users.first().displayName
 }
