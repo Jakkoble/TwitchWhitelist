@@ -57,23 +57,24 @@ class TwitchBot {
       subscription = twitchClient.pubSub.listenForChannelPointsRedemptionEvents(credential, channelID)
       twitchClient.eventManager.onEvent(RewardRedeemedEvent::class.java) { event: RewardRedeemedEvent ->
          if (event.redemption.reward.title.equals(channelRewardName)) {
-            val playerName = (event.redemption.userInput ?: return@onEvent).replace(" ", "")
+            val inputName = (event.redemption.userInput ?: return@onEvent).replace(" ", "")
             val userID = event.redemption.user.id ?: return@onEvent
             if (offlineServer) {
-               handleOfflineServer(playerName, userID, event.redemption.user.displayName)
+               handleOfflineServer(inputName, userID, event.redemption.user.displayName)
                return@onEvent
             }
-            val withSpecialCharacters = Pattern.compile("[^A-Za-z0-9_]").matcher(playerName).find()
-            val userData = if (!withSpecialCharacters) playerName.getUserDataFromName() else null
+            val withSpecialCharacters = Pattern.compile("[^A-Za-z0-9_]").matcher(inputName).find()
+            val userData = if (!withSpecialCharacters) inputName.getUserDataFromName() else null
             @Suppress("KotlinConstantConditions")
-            if (userData == null || playerName.length > 25 || withSpecialCharacters) {
+            if (userData == null || inputName.length > 25 || withSpecialCharacters) {
                if (sendMessage) twitchClient.chat.sendMessage(getChannelofID(channelID), String.format(
                   playerNotFoundMessage,
                   event.redemption.user.displayName,
-                  playerName))
-               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}There is no Player called $playerName.")
+                  inputName))
+               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}There is no Player called $inputName.")
                return@onEvent
             }
+            val playerName = userData.name
             val uuid = userData.id
             if (Whitelist().usedWhitelist(userID)) {
                if (sendMessage) twitchClient.chat.sendMessage(getChannelofID(channelID), String.format(
@@ -83,7 +84,7 @@ class TwitchBot {
                TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}User ${event.redemption.user.displayName} already Whitelisted too many Players.")
                return@onEvent
             }
-            if (!Whitelist().whitelist(UserData(userData.name, uuid, userID))) {
+            if (!Whitelist().whitelist(UserData(playerName, uuid, userID))) {
                if (sendMessage) twitchClient.chat.sendMessage(getChannelofID(channelID), String.format(alreadyWhitelistedMessage, event.redemption.user.displayName, serverName))
                TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}Player $playerName is already Whitelisted.")
                return@onEvent
