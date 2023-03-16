@@ -6,7 +6,7 @@ enum class ConfigEntry(val path: String) {
    TOKEN("token"),
    CHANNEL_ID("channelID"),
    OFFLINE_SERVER("offlineServer"),
-   TICEKTS_PER_USER("ticketsPerUser"),
+   TICKETS_PER_USER("ticketsPerUser"),
    SERVER_NAME("serverName"),
    CHANNEL_REWARD_NAME("channelRewardName"),
    SEND_MESSAGE("sendMessage"),
@@ -25,7 +25,7 @@ class Config {
          config.set(ConfigEntry.TOKEN.path, "YourToken")
          config.set(ConfigEntry.CHANNEL_ID.path, "YourChannelID")
          config.set(ConfigEntry.OFFLINE_SERVER.path, false)
-         config.set(ConfigEntry.TICEKTS_PER_USER.path, 1)
+         config.set(ConfigEntry.TICKETS_PER_USER.path, 1)
          config.set(ConfigEntry.SERVER_NAME.path, "Minecraft Community SMP")
          config.set(ConfigEntry.CHANNEL_REWARD_NAME.path, "Minecraft Whitelist Ticket")
          config.set(ConfigEntry.SEND_MESSAGE.path, true)
@@ -42,7 +42,7 @@ class Config {
       chatToken = getString(ConfigEntry.TOKEN)
       channelID = getString(ConfigEntry.CHANNEL_ID)
       offlineServer = TwitchWhitelist.INSTANCE.config.getBoolean(ConfigEntry.OFFLINE_SERVER.path)
-      ticketPerUser = TwitchWhitelist.INSTANCE.config.getInt(ConfigEntry.TICEKTS_PER_USER.path)
+      ticketPerUser = TwitchWhitelist.INSTANCE.config.getInt(ConfigEntry.TICKETS_PER_USER.path)
       serverName = getString(ConfigEntry.SERVER_NAME)
       channelRewardName = getString(ConfigEntry.CHANNEL_REWARD_NAME)
       sendMessage = TwitchWhitelist.INSTANCE.config.getBoolean(ConfigEntry.SEND_MESSAGE.path)
