@@ -80,15 +80,15 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
                TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}There is no Player called $playerName.")
                return true
             }
-            if (Whitelist().whitelist(UserData(
+            if (!Whitelist().whitelist(UserData(
                   name = playerName,
                   uuid = userData.id,
                   twitchUserID = channelID))) {
-               sendPlayerMessage(sender, "$prefix You have added $playerName to the Whitelist.")
-               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.GREEN}Added Player $playerName to the Whitelist.")
-            } else {
                sendPlayerMessage(sender, "$prefix The Player $playerName is already Whitelisted.")
                TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}Player $playerName is already Whitelisted.")
+            } else {
+               sendPlayerMessage(sender, "$prefix You have added $playerName to the Whitelist.")
+               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.GREEN}Added Player $playerName to the Whitelist.")
             }
          }
          "remove" -> {
