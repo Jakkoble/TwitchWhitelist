@@ -57,31 +57,32 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
          sender.sendUsage()
          return true
       }
-      val playerName = args[1]
+      val inputName = args[1]
       when(args[0]) {
          "add" -> {
             if (offlineServer) {
                if (!Whitelist().whitelist(UserData(
-                     name = playerName,
+                     name = inputName,
                      uuid = "OFFLINEPLAYER",
                      twitchUserID = channelID
                   ))) {
-                  sendPlayerMessage(sender, "$prefix The Player $playerName is already Whitelisted. (Offline Server)")
-                  TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}Player $playerName is already Whitelisted. (Offline Server)")
+                  sendPlayerMessage(sender, "$prefix The Player $inputName is already Whitelisted. (Offline Server)")
+                  TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}Player $inputName is already Whitelisted. (Offline Server)")
                   return true
                }
-               sendPlayerMessage(sender, "$prefix You have added $playerName to the Whitelist. (Offline Server)")
-               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.GREEN}Added Player $playerName to the Whitelist. (Offline Server)")
+               sendPlayerMessage(sender, "$prefix You have added $inputName to the Whitelist. (Offline Server)")
+               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.GREEN}Added Player $inputName to the Whitelist. (Offline Server)")
                return true
             }
-            val userData = playerName.getUserDataFromName()
-            if (userData == null || playerName.length > 25) {
-               sendPlayerMessage(sender, "$prefix There is no Player called $playerName")
-               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}There is no Player called $playerName.")
+            val userData = inputName.getUserDataFromName()
+            val playerName = userData?.name
+            if (userData == null || inputName.length > 25) {
+               sendPlayerMessage(sender, "$prefix There is no Player called ${userData?.name ?: inputName}")
+               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}There is no Player called ${userData?.name ?: inputName}.")
                return true
             }
             if (!Whitelist().whitelist(UserData(
-                  name = playerName,
+                  name = inputName,
                   uuid = userData.id,
                   twitchUserID = channelID))) {
                sendPlayerMessage(sender, "$prefix The Player $playerName is already Whitelisted.")
@@ -92,18 +93,29 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
             }
          }
          "remove" -> {
-            val userData = Whitelist().userDataByName(playerName)
-            if (userData == null || playerName.length > 25) {
-               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}There is no Player called $playerName.")
-               sendPlayerMessage(sender, "$prefix There is no Player called $playerName")
+            if (offlineServer) {
+               if(!Whitelist().unwhitelist("OFFLINEPLAYER", inputName)) {
+                  sendPlayerMessage(sender, "$prefix The Player $inputName is not Whitelisted.")
+                  TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}The Player $inputName is not Whitelisted.")
+               } else {
+                  sendPlayerMessage(sender, "$prefix You have removed $inputName from the Whitelist.")
+                  TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.RED}Removed Player $inputName from Whitelist.")
+               }
                return true
             }
-            if (Whitelist().unwhitelist(userData.uuid, userData.name)) {
-               sendPlayerMessage(sender, "$prefix You have removed $playerName from the Whitelist.")
-               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.RED}Player $playerName removed from Whitelist.")
-            } else {
+            val userData = Whitelist().userDataByName(inputName)
+            val playerName = userData?.name
+            if (userData == null || inputName.length > 25) {
+               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}There is no Player called ${playerName ?: inputName}.")
+               sendPlayerMessage(sender, "$prefix There is no Player called ${playerName ?: inputName}")
+               return true
+            }
+            if (!Whitelist().unwhitelist(userData.uuid, userData.name)) {
                sendPlayerMessage(sender, "$prefix The Player $playerName is not Whitelisted.")
                TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}Player $playerName is not Whitelisted.")
+            } else {
+               sendPlayerMessage(sender, "$prefix You have removed $playerName from the Whitelist.")
+               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.RED}Removed Player $playerName from Whitelist.")
             }
          }
       }
