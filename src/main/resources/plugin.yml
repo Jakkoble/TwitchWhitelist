@@ -1,10 +1,10 @@
 name: TwitchWhitelist
-version: 2.0
+version: 2.1
 main: de.jakkoble.TwitchWhitelist
 api-version: 1.16
 author: Jakkoble
 description: Whitelist Players via Twitch Channel Points Reward
-website: https://twitch.tv/jakkoble
+website: https://jakkoble.de
 libraries:
   - "org.jetbrains.kotlin:kotlin-stdlib:1.7.10"
   - "com.github.twitch4j:twitch4j:1.12.0"

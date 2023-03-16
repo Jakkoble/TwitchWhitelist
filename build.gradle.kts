@@ -2,11 +2,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
    kotlin("jvm") version "1.6.21"
-   id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "de.jakkoble"
-version = "2.0"
+version = "2.1"
 
 repositories {
    mavenCentral()
@@ -18,7 +17,7 @@ repositories {
 
 dependencies {
    compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
-   implementation("com.github.twitch4j:twitch4j:1.12.0")
+   implementation("com.github.twitch4j:twitch4j:1.14.0")
 }
 
 java {
