@@ -83,7 +83,7 @@ class TwitchBot {
                TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}User ${event.redemption.user.displayName} already Whitelisted too many Players.")
                return@onEvent
             }
-            if (!Whitelist().whitelist(UserData(playerName, uuid, userID))) {
+            if (!Whitelist().whitelist(UserData(userData.name, uuid, userID))) {
                if (sendMessage) twitchClient.chat.sendMessage(getChannelofID(channelID), String.format(alreadyWhitelistedMessage, event.redemption.user.displayName, serverName))
                TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}Player $playerName is already Whitelisted.")
                return@onEvent
