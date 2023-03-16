@@ -27,11 +27,11 @@ class Whitelist {
    }
    fun unwhitelist(uuid: String, name: String): Boolean {
       if (!isWhitelisted(uuid, name)) return false
-      whitelist.removeIf { it.uuid == uuid && it.name == name}
+      whitelist.removeIf { it.uuid == uuid && it.name.equals(name, ignoreCase = true)}
       whitelistFile.writeText(GsonBuilder().setPrettyPrinting().create().toJson(whitelist))
       return true
    }
-   fun isWhitelisted(uuid: String, name: String): Boolean = if (offlineServer) whitelist.any { it.name == name}
+   fun isWhitelisted(uuid: String, name: String): Boolean = if (offlineServer) whitelist.any { it.name.equals(name, ignoreCase = true)}
       else whitelist.any { it.uuid == uuid.replace("-", "") }
    fun playerNames(): List<String> = whitelist.map { it.name }
    fun usedWhitelist(twitchUserID: String): Boolean {
@@ -39,7 +39,7 @@ class Whitelist {
       if (whitelist.count { it.twitchUserID == twitchUserID } >= ticketPerUser) return true
       return false
    }
-   fun userDataByName(name: String): UserData? = whitelist.firstOrNull { it.name == name }
+   fun userDataByName(name: String): UserData? = whitelist.firstOrNull { it.name.equals(name, ignoreCase = true) }
 }
 data class UserData(val name: String, val uuid: String, val twitchUserID: String)
 
