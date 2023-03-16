@@ -39,7 +39,7 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
          "list" -> {
             sender.sendMessage("")
             val playerNames = Whitelist().playerNames()
-            if (playerNames.isEmpty()) sender.sendMessage("No Player is Whitelisted")
+            if (playerNames.isEmpty()) sender.sendMessage("${ChatColor.GOLD}No Player is Whitelisted")
             else {
                sender.sendMessage("${ChatColor.GOLD}There ${if(playerNames.size == 1) "is one Player" else "are ${playerNames.size} Players"} whitelisted.")
                val message = StringBuilder()
