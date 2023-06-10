@@ -8,6 +8,10 @@ website: https://jakkoble.de
 libraries:
   - "org.jetbrains.kotlin:kotlin-stdlib:1.7.10"
   - "com.github.twitch4j:twitch4j:1.12.0"
+  - "io.github.openfeign:feign-okhttp:12.3"
+  - "io.github.openfeign:feign-slf4j:12.3"
+  - "io.github.openfeign:feign-jackson:12.3"
+  - "io.github.openfeign:feign-hystrix:12.3"
 commands:
   whitelist:
     description: Manage the whitelisted Members
