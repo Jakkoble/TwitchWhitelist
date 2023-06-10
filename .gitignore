@@ -3,3 +3,5 @@
 /build/
 /.gitignore
 /gradle/wrapper/
+/.gradle/
+/gradle/wrapper/
