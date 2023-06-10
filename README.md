@@ -1,6 +1,6 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/jakkoble/twitchwhitelist/badge)](https://www.codefactor.io/repository/github/jakkoble/twitchwhitelist)
 # TwitchWhitelist
-This is a customisable 1.8-1.19 Spigot Plugin to **Whitelist Players** via **Twitch Channel Points Rewards**.
+This is a customisable 1.8-1.20 Spigot Plugin to **Whitelist Players** via **Twitch Channel Points Rewards**.
 </br>
 ## Setup
 1. Setup a **PaperMC (recommended)** or **SpigotMC** Minecraft Server like **[here](https://docs.papermc.io/paper/getting-started#downloading-paper)**
