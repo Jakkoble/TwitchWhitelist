@@ -74,14 +74,14 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
                return true
             }
             val userData = inputName.getUserDataFromName()
-            val playerName = userData?.name
-            if (userData == null || inputName.length > 25) {
+            if (userData?.id == null || userData.name == null || inputName.length > 25) {
                sendPlayerMessage(sender, "$prefix There is no Player called ${userData?.name ?: inputName}")
                TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}There is no Player called ${userData?.name ?: inputName}.")
                return true
             }
+            val playerName = userData.name
             if (!Whitelist().whitelist(UserData(
-                  name = playerName ?: return true,
+                  name = playerName,
                   uuid = userData.id,
                   twitchUserID = channelID))) {
                sendPlayerMessage(sender, "$prefix The Player $playerName is already Whitelisted.")

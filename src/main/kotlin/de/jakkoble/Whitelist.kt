@@ -36,19 +36,23 @@ class Whitelist {
    fun playerNames(): List<String> = whitelist.map { it.name }
    fun usedWhitelist(twitchUserID: String): Boolean {
       if (twitchUserID == channelID) return false
-      if (whitelist.count { it.twitchUserID == twitchUserID } >= ticketPerUser) return true
-      return false
+      return whitelist.count { it.twitchUserID == twitchUserID } >= ticketPerUser
    }
    fun userDataByName(name: String): UserData? = whitelist.firstOrNull { it.name.equals(name, ignoreCase = true) }
 }
 data class UserData(val name: String, val uuid: String, val twitchUserID: String)
 
-fun String.getUserDataFromName(): Response? = getRequest("https://api.mojang.com/users/profiles/minecraft/$this")
-data class Response(val name: String, val id: String)
+fun String.getUserDataFromName(): Response? {
+   val result = getRequest("https://api.mojang.com/users/profiles/minecraft/$this")
+   if (result == null) TwitchWhitelist.INSTANCE.logger.warning("I am absolutely null")
+   return result
+}
+data class Response(val name: String?, val id: String?)
 fun getRequest(url: String): Response? {
    val client = HttpClient.newBuilder().build()
    val request = HttpRequest.newBuilder()
       .uri(URI.create(url))
       .build()
-   return Gson().fromJson(client.send(request, HttpResponse.BodyHandlers.ofString()).body(), Response::class.java)
+   val data = client.send(request, HttpResponse.BodyHandlers.ofString()).body() ?: null
+   return Gson().fromJson(data, Response::class.java)
 }

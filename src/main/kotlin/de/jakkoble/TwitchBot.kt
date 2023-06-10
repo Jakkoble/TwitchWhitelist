@@ -66,7 +66,7 @@ class TwitchBot {
             val withSpecialCharacters = Pattern.compile("[^A-Za-z0-9_]").matcher(inputName).find()
             val userData = if (!withSpecialCharacters) inputName.getUserDataFromName() else null
             @Suppress("KotlinConstantConditions")
-            if (userData == null || inputName.length > 25 || withSpecialCharacters) {
+            if (userData?.id == null || userData.name == null || inputName.length > 25 || withSpecialCharacters) {
                if (sendMessage) twitchClient.chat.sendMessage(getChannelOfId(channelID), String.format(
                   playerNotFoundMessage,
                   event.redemption.user.displayName,
