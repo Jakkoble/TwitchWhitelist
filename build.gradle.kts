@@ -17,19 +17,11 @@ repositories {
 
 dependencies {
    compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
-   implementation("com.github.twitch4j:twitch4j:1.14.0")
+   implementation("com.github.twitch4j:twitch4j:1.15.0")
 }
 
 java {
    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-}
-
-dependencies {
-   testImplementation(kotlin("test"))
-}
-
-tasks.test {
-   useJUnitPlatform()
 }
 
 tasks.withType<KotlinCompile> {
