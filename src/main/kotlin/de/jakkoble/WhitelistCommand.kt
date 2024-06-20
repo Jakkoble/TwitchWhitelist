@@ -4,7 +4,9 @@ import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.command.TabCompleter
+import java.util.regex.Pattern
 
 class WhitelistCommand : CommandExecutor, TabCompleter {
    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
@@ -38,7 +40,7 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
          "list" -> {
             sender.sendMessage("")
             val playerNames = Whitelist().playerNames()
-            if (playerNames.isEmpty()) sender.sendMessage("${ChatColor.GOLD}No Player is Whitelisted")
+            if (playerNames.isEmpty()) sender.sendMessage("${ChatColor.GOLD}No Player is whitelisted")
             else {
                sender.sendMessage("${ChatColor.GOLD}There ${if(playerNames.size == 1) "is one Player" else "are ${playerNames.size} Players"} whitelisted.")
                val message = StringBuilder()
@@ -59,14 +61,20 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
       val inputName = args[1]
       when(args[0]) {
          "add" -> {
+            val withSpecialCharacters = Pattern.compile("[^A-Za-z0-9_]").matcher(inputName).find()
+            if (withSpecialCharacters) {
+               sendPlayerMessage(sender, "$prefix There is no Player called $inputName.")
+               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}There is no Player called $inputName.")
+               return true
+            }
             if (offlineServer) {
                if (!Whitelist().whitelist(UserData(
                      name = inputName,
                      uuid = "OFFLINEPLAYER",
                      twitchUserID = channelID
                   ))) {
-                  sendPlayerMessage(sender, "$prefix The Player $inputName is already Whitelisted. (Offline Server)")
-                  TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}Player $inputName is already Whitelisted. (Offline Server)")
+                  sendPlayerMessage(sender, "$prefix The Player $inputName is already whitelisted. (Offline Server)")
+                  TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}Player $inputName is already whitelisted. (Offline Server)")
                   return true
                }
                sendPlayerMessage(sender, "$prefix You have added $inputName to the Whitelist. (Offline Server)")
@@ -75,7 +83,7 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
             }
             val userData = inputName.getUserDataFromName()
             if (userData?.id == null || userData.name == null || inputName.length > 25) {
-               sendPlayerMessage(sender, "$prefix There is no Player called ${userData?.name ?: inputName}")
+               sendPlayerMessage(sender, "$prefix There is no Player called ${userData?.name ?: inputName}.")
                TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}There is no Player called ${userData?.name ?: inputName}.")
                return true
             }
@@ -84,18 +92,18 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
                   name = playerName,
                   uuid = userData.id,
                   twitchUserID = channelID))) {
-               sendPlayerMessage(sender, "$prefix The Player $playerName is already Whitelisted.")
-               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}Player $playerName is already Whitelisted.")
+               sendPlayerMessage(sender, "$prefix The Player $playerName is already whitelisted.")
+               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}Player $playerName is already whitelisted.")
             } else {
-               sendPlayerMessage(sender, "$prefix You have added $playerName to the Whitelist.")
+               if (sender !is ConsoleCommandSender) sendPlayerMessage(sender, "$prefix You have added $playerName to the Whitelist.")
                TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.GREEN}Added Player $playerName to the Whitelist.")
             }
          }
          "remove" -> {
             if (offlineServer) {
                if(!Whitelist().unwhitelist("OFFLINEPLAYER", inputName)) {
-                  sendPlayerMessage(sender, "$prefix The Player $inputName is not Whitelisted.")
-                  TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}The Player $inputName is not Whitelisted.")
+                  sendPlayerMessage(sender, "$prefix The Player $inputName is not whitelisted.")
+                  TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}The Player $inputName is not whitelisted.")
                } else {
                   sendPlayerMessage(sender, "$prefix You have removed $inputName from the Whitelist.")
                   TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.RED}Removed Player $inputName from Whitelist.")
@@ -104,14 +112,9 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
             }
             val userData = Whitelist().userDataByName(inputName)
             val playerName = userData?.name
-            if (userData == null || inputName.length > 25) {
-               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}There is no Player called ${playerName ?: inputName}.")
-               sendPlayerMessage(sender, "$prefix There is no Player called ${playerName ?: inputName}")
-               return true
-            }
-            if (!Whitelist().unwhitelist(userData.uuid, userData.name)) {
-               sendPlayerMessage(sender, "$prefix The Player $playerName is not Whitelisted.")
-               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}Player $playerName is not Whitelisted.")
+            if (userData === null || !Whitelist().unwhitelist(userData.uuid, userData.name)) {
+               sendPlayerMessage(sender, "$prefix The Player ${playerName ?: inputName} is not whitelisted.")
+               TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.YELLOW}The Player ${playerName ?: inputName} is not whitelisted.")
             } else {
                sendPlayerMessage(sender, "$prefix You have removed $playerName from the Whitelist.")
                TwitchWhitelist.INSTANCE.server.consoleSender.sendMessage("${ChatColor.RED}Removed Player $playerName from Whitelist.")
@@ -140,6 +143,7 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
       return tabList
    }
    private fun sendPlayerMessage(sender: CommandSender, message: String) {
+      if (sender is ConsoleCommandSender) return;
       sender.sendMessage(message)
    }
 }

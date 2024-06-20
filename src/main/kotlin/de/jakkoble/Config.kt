@@ -29,11 +29,11 @@ class Config {
          config.set(ConfigEntry.SERVER_NAME.path, "Minecraft Community SMP")
          config.set(ConfigEntry.CHANNEL_REWARD_NAME.path, "Minecraft Whitelist Ticket")
          config.set(ConfigEntry.SEND_MESSAGE.path, true)
-         config.set(ConfigEntry.SUCCESS_MESSAGE.path, "/me %s, you are now Whitelisted on the '%s'.")
-         config.set(ConfigEntry.PLAYER_NOT_FOUND_MESSAGE.path, "/me %s, there is no Player called '%s'.")
-         config.set(ConfigEntry.ALREADY_WHITELISTED_MESSAGE.path, "/me %s, you are already Whitelisted on the '%s'.")
-         config.set(ConfigEntry.TOO_MANY_PLAYERS_WHITELISTED_MESSAGE.path, "/me %s, you have already Whitelisted to many Players to the '%s'.")
-         config.set(ConfigEntry.NOT_WHITELISTED_TEXT.path, "§cYou are not Whitelisted on this Server! Purchase a Whitelist Slot via Channel Points Reward at '%s'.")
+         config.set(ConfigEntry.SUCCESS_MESSAGE.path, "/me %s, you are now Whitelisted on the %s.")
+         config.set(ConfigEntry.PLAYER_NOT_FOUND_MESSAGE.path, "/me %s, there is no Player called %s.")
+         config.set(ConfigEntry.ALREADY_WHITELISTED_MESSAGE.path, "/me %s, you are already Whitelisted on the %s.")
+         config.set(ConfigEntry.TOO_MANY_PLAYERS_WHITELISTED_MESSAGE.path, "/me %s, you have already Whitelisted to many Players to the %s.")
+         config.set(ConfigEntry.NOT_WHITELISTED_TEXT.path, "§cYou are not Whitelisted on this Server! Purchase a Whitelist Slot via Channel Points Reward at %s.")
          TwitchWhitelist.INSTANCE.saveConfig()
       }
    }

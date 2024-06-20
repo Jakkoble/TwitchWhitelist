@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "de.jakkoble"
-version = "2.2"
+version = "2.3"
 
 repositories {
    mavenCentral()
@@ -28,7 +28,7 @@ dependencies {
 }
 
 java {
-   toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+   toolchain.languageVersion.set(JavaLanguageVersion.of(22))
 }
 
 tasks.withType<KotlinCompile> {
