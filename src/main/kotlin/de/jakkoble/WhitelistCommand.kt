@@ -143,7 +143,7 @@ class WhitelistCommand : CommandExecutor, TabCompleter {
       return tabList
    }
    private fun sendPlayerMessage(sender: CommandSender, message: String) {
-      if (sender is ConsoleCommandSender) return;
+      if (sender is ConsoleCommandSender) return
       sender.sendMessage(message)
    }
 }

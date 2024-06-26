@@ -42,11 +42,8 @@ class Whitelist {
 }
 data class UserData(val name: String, val uuid: String, val twitchUserID: String)
 
-fun String.getUserDataFromName(): Response? {
-   val result = getRequest("https://api.mojang.com/users/profiles/minecraft/$this")
-   if (result == null) TwitchWhitelist.INSTANCE.logger.warning("I am absolutely null")
-   return result
-}
+fun String.getUserDataFromName(): Response? = getRequest("https://api.mojang.com/users/profiles/minecraft/$this")
+
 data class Response(val name: String?, val id: String?)
 fun getRequest(url: String): Response? {
    val client = HttpClient.newBuilder().build()
