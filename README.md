@@ -1,6 +1,6 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/jakkoble/twitchwhitelist/badge)](https://www.codefactor.io/repository/github/jakkoble/twitchwhitelist)
 # TwitchWhitelist
-This is a customisable 1.8-1.20 Spigot Plugin to **Whitelist Players** via **Twitch Channel Points Rewards**.
+This is a customisable 1.8-1.21 Spigot Plugin to **Whitelist Players** via **Twitch Channel Points Rewards**.
 <br />
 <br />
 
